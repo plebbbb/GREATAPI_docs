@@ -315,6 +315,14 @@
             <a href="#installation" class="toc-h1 toc-link" data-title="Installation">Installation</a>
           </li>
           <li>
+            <a href="#odometry" class="toc-h1 toc-link" data-title="Odometry">Odometry</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#rotational-odometry" class="toc-h2 toc-link" data-title="Rotational Odometry">Rotational Odometry</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
           </li>
       </ul>
@@ -342,6 +350,84 @@ prosv5 conduct fetch greatapi@[whatever version we are on].zip
 <p><code>
 prosv5 conduct apply greatapi
 </code></p>
+<h1 id='odometry'>Odometry</h1>
+<p>GREATAPI provides multiple feature levels of odometry for different robot configurations.</p>
+<h2 id='rotational-odometry'>Rotational Odometry</h2>
+<p>The lowest feature level GREATAPI provides is rotation tracking via the <code>odom_rotation</code> class.</p>
+
+<p>Various tracking approaches are supported by child classes of <code>odom_rotation</code></p>
+
+<table><thead>
+<tr>
+<th>Class Name</th>
+<th>Utlized Sensors</th>
+<th>Required Measurements</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>IMU_odom_rotation</td>
+<td>1x V5 Inertial Sensor</td>
+<td>Inertial drift compensation multiplier</td>
+</tr>
+<tr>
+<td>DoubleIMU_odom_rotation</td>
+<td>2x V5 Inertial Sensor</td>
+<td>none</td>
+</tr>
+<tr>
+<td>TWheel_odom_rotation</td>
+<td>2x Wheel encoders(any type)</td>
+<td>Distance between wheel encoders, wheel diameters</td>
+</tr>
+</tbody></table>
+
+<aside class="aside">
+<code>TWheel_odom_rotation</code> uses distance measurements from <code>TWheel</code> objects. These are described in the <code>TWheel</code> section of the site. Wheel diameters are defined during the construction of <TWheel> objects, not in <code>TWheel_odom_rotation</code>
+</aside>
+  
+
+<aside class = "warning">
+<code>TWheel_odom_rotation</code> must use two parallel wheel encoders.
+</aside>
+
+<p><code>odom_rotation</code> provides two functions for the end user:</p>
+
+<table><thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+<th>Output</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>get_heading()</td>
+<td>Returns absolute heading of robot from starting position</td>
+<td><code>SRAD</code> angle object</td>
+</tr>
+<tr>
+<td>applyOffset(SRAD real)</td>
+<td>Calibrates odometry output to match that of the real angle</td>
+<td>nothing</td>
+</tr>
+</tbody></table>
+
+<p>It is recommended to </p>
+<h3 id='imu_odom_rotation'>IMU_odom_rotation</h3>
+<p><code>IMU_odom_rotation</code> is a basic wrapper for the vex IMU. </p>
+
+<p>The only capability it provides is to adjust for </p>
+
+<blockquote>
+<p>Prototype
+<code>cpp
+  IMU_odom_rotation(int port, double driftcompensationfac)
+</code></p>
+
+<p>Example
+<code>cpp
+  greatapi::IMU_odom_rotation example(15, 1.01); //IMU on port 15, 101% drift compensation factor
+</code></p>
+</blockquote>
 <h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
