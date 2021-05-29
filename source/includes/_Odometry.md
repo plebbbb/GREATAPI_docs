@@ -39,11 +39,13 @@ It is recommended to
 The only capability it provides is to adjust for 
 
 > Prototype
+  
 ```cpp
   IMU_odom_rotation(int port, double driftcompensationfac)
 ```
 
 > Example
+  
 ```cpp
   greatapi::IMU_odom_rotation example(15, 1.01); //IMU on port 15, 101% drift compensation factor
 ```
