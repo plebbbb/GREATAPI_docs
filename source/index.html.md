@@ -3,10 +3,9 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - cpp
-  - console
-
+ 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
+  - <a href='https://www.stlrobotics.org/'>Go to our website</a>
   - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -20,7 +19,6 @@ code_clipboard: true
 # Introduction
 
 Welcome to GREATAPI, a Vex Robotics library for the PROS API. 
-
 
 # Installation
 
