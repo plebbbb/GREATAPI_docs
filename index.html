@@ -414,23 +414,6 @@ prosv5 conduct apply greatapi
 <aside class = "notice"> Note that <code>odom_rotation</code> itself does not provide any angle calculation capabilities. Please construct one of the availiable child class options instead when programming your robot.
 </aside>
 <h3 id='imu_odom_rotation'>IMU_odom_rotation</h3>
-<p><code>IMU_odom_rotation</code> is a basic wrapper for the vex IMU. </p>
-
-<p>It provides the capability to counteract integration drift via scaling the calculated angle by a specific amount. </p>
-<h3 id='integration-drift'>Integration drift</h3>
-<p>Integration drift is a phenomenon commonly found in inertial sensors. Inertial sensors measure the acceleration, and angular velocity of the robot at any point in time. To convert these values into more useful measurements like speed, heading, or position, we must use a technique known as integration. While we don&#39;t know where the robot actually is with these sensor values, we can assume that it starts at some fixed state(like not moving). From there, we can convert our accelerations and angular velocities into velocity, position, and heading changes. These can be added to the previous calculated position to get the current position.</p>
-
-<p>There are two problems with this approach that form what we call integration drift.</p>
-
-<ul>
-<li>Calculation inaccuracies cannot be removed, and can(and will) add up until the sensor is very inaccurate</li>
-<li>The integration process of converting measurements upscales any sensor inaccuracies.
-
-<ul>
-<li>Incidentally, this is why most vex libraries don&#39;t provide the feature to calculate position using the IMU. To get position data, one needs to integrate twice(acceleration -&gt; velocity -&gt; position), greatly reducing accuracy. Heading data only needs one integration(angular velocity -&gt; heading), which isn&#39;t as brutal.</li>
-</ul></li>
-</ul>
-
 <blockquote>
 <p>Prototype</p>
 </blockquote>
@@ -449,6 +432,23 @@ prosv5 conduct apply greatapi
 <blockquote>
 <p>The v5 IMU has an update period of 10ms. Checking more frequently than that will not yield different results.</p>
 </blockquote>
+
+<p><code>IMU_odom_rotation</code> is a basic wrapper for the vex IMU. </p>
+
+<p>It provides the capability to counteract integration drift via scaling the calculated angle by a specific amount. </p>
+<h3 id='integration-drift'>Integration drift</h3>
+<p>Integration drift is a phenomenon commonly found in inertial sensors. Inertial sensors measure the acceleration, and angular velocity of the robot at any point in time. To convert these values into more useful measurements like speed, heading, or position, we must use a technique known as integration. While we don&#39;t know where the robot actually is with these sensor values, we can assume that it starts at some fixed state(like not moving). From there, we can convert our accelerations and angular velocities into velocity, position, and heading changes. These can be added to the previous calculated position to get the current position.</p>
+
+<p>There are two problems with this approach that form what we call integration drift.</p>
+
+<ul>
+<li>Calculation inaccuracies cannot be removed, and can(and will) add up until the sensor is very inaccurate</li>
+<li>The integration process of converting measurements upscales any sensor inaccuracies.
+
+<ul>
+<li>Incidentally, this is why most vex libraries don&#39;t provide the feature to calculate position using the IMU. To get position data, one needs to integrate twice(acceleration -&gt; velocity -&gt; position), greatly reducing accuracy. Heading data only needs one integration(angular velocity -&gt; heading), which isn&#39;t as brutal.</li>
+</ul></li>
+</ul>
 <h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
