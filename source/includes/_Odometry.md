@@ -22,14 +22,14 @@ TWheel_odom_rotation | 2x Wheel encoders(any type) | Distance between wheel enco
 <code>TWheel_odom_rotation</code> must use two parallel wheel encoders.
 </aside>
 
-<code>odom_rotation</code> provides two functions for the end user:
+<code>odom_rotation</code> child classes provide two functions for the end user:
 
 Function | Purpose | Output |
 -------- | ------- | ------ |
 get_heading() | Returns absolute heading of robot from starting position | <code>SRAD</code> angle object
 applyOffset(SRAD real) | Calibrates odometry output to match that of the real angle | nothing 
 
-<aside class = "notice"> Note that <code>odom_rotation</code> itself does not provide any angle calculation capabilities. Please construct one of the availiable child class options instead when programming your robot.
+<aside class = "warning"> Note that <code>odom_rotation</code> itself does not provide any angle calculation capabilities. Please construct one of the availiable child class options instead when programming your robot.
 </aside>
 
 ### IMU_odom_rotation
