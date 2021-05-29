@@ -418,17 +418,15 @@ prosv5 conduct apply greatapi
 <p>The only capability it provides is to adjust for </p>
 
 <blockquote>
-<p>Prototype
-<code>cpp
-  IMU_odom_rotation(int port, double driftcompensationfac)
-</code></p>
-
-<p>Example
-<code>cpp
-  greatapi::IMU_odom_rotation example(15, 1.01); //IMU on port 15, 101% drift compensation factor
-</code></p>
+<p>Prototype</p>
 </blockquote>
-<h1 id='errors'>Errors</h1>
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code>  <span class="n">IMU_odom_rotation</span><span class="p">(</span><span class="kt">int</span> <span class="n">port</span><span class="p">,</span> <span class="kt">double</span> <span class="n">driftcompensationfac</span><span class="p">)</span>
+</code></pre></div>
+<blockquote>
+<p>Example</p>
+</blockquote>
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code>  <span class="n">greatapi</span><span class="o">::</span><span class="n">IMU_odom_rotation</span> <span class="nf">example</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">);</span> <span class="c1">//IMU on port 15, 101% drift compensation factor</span>
+</code></pre></div><h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
 </aside>
