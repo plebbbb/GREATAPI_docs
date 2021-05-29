@@ -381,7 +381,7 @@ prosv5 conduct apply greatapi
 </tr>
 </tbody></table>
 
-<aside class="aside">
+<aside class="notice">
 <code>TWheel_odom_rotation</code> uses distance measurements from <code>TWheel</code> objects. These are described in the <code>TWheel</code> section of the site. Wheel diameters are defined during the construction of <TWheel> objects, not in <code>TWheel_odom_rotation</code>
 </aside>
   
@@ -411,11 +411,21 @@ prosv5 conduct apply greatapi
 </tr>
 </tbody></table>
 
-<p>It is recommended to </p>
+<aside class = "notice"> Note that <code>odom_rotation</code> itself does not provide any angle calculation capabilities. Please construct one of the availiable child class options instead when programming your robot.
+</aside>
 <h3 id='imu_odom_rotation'>IMU_odom_rotation</h3>
 <p><code>IMU_odom_rotation</code> is a basic wrapper for the vex IMU. </p>
 
-<p>The only capability it provides is to adjust for </p>
+<p>It provides the capability to counteract integration drift via scaling the calculated angle by a specific amount. </p>
+
+<aside class = "notice">
+Integration drift is a phenomenon commonly found in inertial sensors. Inertial sensors measure the acceleration, and angular velocity of the robot at any point in time. To convert these values into more useful measurements like speed, heading, or position, we must use a technique known as integration. While we don't know where the robot actually is with these sensor values, we can assume that it starts at some fixed state(like not moving). From there, we can convert our accelerations and angular velocities into velocity, position, and heading changes. These can be added to the previous calculated position to get the current position.
+
+There are two problems with this approach that form what we call integration drift.
+* Calculation inaccuracies cannot be removed, and can(and will) add up until the sensor is very inaccurate
+* The integration process of converting measurements upscales any sensor inaccuracies.
+  * Incidentally, this is why most vex libraries don't provide the feature to calculate position using the IMU. To get position data, one needs to integrate twice(acceleration -> velocity -> position), greatly reducing accuracy. Heading data only needs one integration(angular velocity -> heading), which isn't as brutal.
+</aside>
 
 <blockquote>
 <p>Prototype</p>
@@ -425,8 +435,17 @@ prosv5 conduct apply greatapi
 <blockquote>
 <p>Example</p>
 </blockquote>
-<div class="highlight"><pre class="highlight cpp tab-cpp"><code>  <span class="n">greatapi</span><span class="o">::</span><span class="n">IMU_odom_rotation</span> <span class="nf">example</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">);</span> <span class="c1">//IMU on port 15, 101% drift compensation factor</span>
-</code></pre></div><h1 id='errors'>Errors</h1>
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code>  <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">IMU_odom_rotation</span> <span class="nf">example</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">);</span> <span class="c1">//IMU on port 15, 101% drift compensation factor</span>
+  <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>
+    <span class="n">SRAD</span> <span class="n">currentangle</span> <span class="o">=</span> <span class="n">example</span><span class="p">.</span><span class="n">get_heading</span><span class="p">();</span> <span class="c1">//get current heading</span>
+    <span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">currentangle</span><span class="p">);</span> <span class="c1">//print angle on terminal</span>
+    <span class="n">pros</span><span class="o">::</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//10ms delay</span>
+  <span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>The v5 IMU has an update period of 10ms. Checking more frequently than that will not yield different results.</p>
+</blockquote>
+<h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
 </aside>
