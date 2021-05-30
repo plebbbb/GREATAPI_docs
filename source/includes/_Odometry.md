@@ -85,10 +85,11 @@ Supposedly, there is a method of canceling out inertial drift with the same mode
   
 ```cpp
   //TWheel is an abstract class. You should be using the constructor of specific TWheels
-  greatapi::TWheel* leftwheel = new TWheel_Motor(5, E_MOTOR_GEARSET_18,true, 2.75); //200RPM motor connected to 2.75 inch wheel
+  greatapi::TWheel* leftwheel = new TWheel_Motor(5, E_MOTOR_GEARSET_18,true, 2.75); //V5 motor, 200RPM, reversed, 2.75in wheel
 
   //For information on TWheel, please see the TWheel section of the site.
-  greatapi::TWheel* rightwheel = new TWheel_RotationSensor(4, true, 4); //Rotation sensor connected to 4 inch wheel
+  greatapi::TWheel* rightwheel = new TWheel_RotationSensor(4, false, 4); //V5 rotation sensor, not reversed, 4in wheel
+  //note that we are making TWheel* (TWheel pointers), not TWheels.
  
   greatapi::odometry::TWheel_odom_rotation example = *new TWheel_odom_rotation(leftwheel,rightwheel,15) //15 inches between
 
@@ -99,13 +100,19 @@ Supposedly, there is a method of canceling out inertial drift with the same mode
   }
 ```
   
-<code>TWheel_odom_rotation</code> provides rotational odometry through usage of parallel wheels mounted onto encoders.
+<code>TWheel_odom_rotation</code> provides rotational odometry through usage of two parallel wheels mounted onto some type encoder.
 
 <aside class = 'warning'>
 It must be noted that TWheel objects must be constructed with the new keyword, in order to ensure that they exist in memory. The constructor takes TWheels in pointer form, meaning that you need to make TWheel* pointers instead of TWheels. The positive direction of travel must be forwards in your TWheel constructors.
 </aside>
 
 By comparing the traveled distances between two parallel wheels, it is possible to determine the relative distance from their starting orientations. We can logically explain this by noting that two parallel wheels will always traverse the same distance in translations. Therefore, any difference in their travel must be from rotations. 
+
+The mathematical expression to determine this distance is the following:
+
+**Angle from start(in radians) = (distance of right wheel - distance of left wheel) / (distance between wheels)** 
+
+This yields positive angles for CCW rotations, and negative angles for CW rotations.
 
 <aside class = 'notice'>
 The wheels can be mounted anywhere on the robot, even asymetrically, as long as they are parallel. The <code>dist_btwn</code> parameter needs the distance between the wheels only in the axis perpendicular to the travel direction of the wheel.
