@@ -474,10 +474,10 @@ prosv5 conduct apply greatapi
     <span class="n">pros</span><span class="o">::</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//10ms delay</span>
   <span class="p">}</span>
 </code></pre></div>
-<p><code>TWheel_odom_rotation</code> provides rotational odometry through usage of two parallel wheels mounted onto some type encoder.</p>
+<p><code>TWheel_odom_rotation</code> provides rotational odometry through usage of two parallel wheels mounted onto some type of encoder.</p>
 
 <aside class = 'warning'>
-It must be noted that TWheel objects must be constructed with the new keyword, in order to ensure that they exist in memory. The constructor takes TWheels in pointer form, meaning that you need to make TWheel* pointers instead of TWheels. The positive direction of travel must be forwards in your TWheel constructors.
+TWheel objects must be constructed with the new keyword in order to ensure that they exist in memory as the class doesnt store them. The constructor takes TWheels in pointer form, meaning that you need to make TWheel* pointers instead of TWheels. The positive direction of travel must be forwards in your TWheel constructors.
 </aside>
 
 <p>By comparing the traveled distances between two parallel wheels, it is possible to determine the relative distance from their starting orientations. We can logically explain this by noting that two parallel wheels will always traverse the same distance in translations. Therefore, any difference in their travel must be from rotations. </p>
