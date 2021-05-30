@@ -381,13 +381,8 @@ prosv5 conduct apply greatapi
 </tr>
 </tbody></table>
 
-<aside class="notice">
-<code>TWheel_odom_rotation</code> uses distance measurements from <code>TWheel</code> objects. These are described in the <code>TWheel</code> section of the site. Wheel diameters are defined during the construction of <TWheel> objects, not in <code>TWheel_odom_rotation</code>
-</aside>
-  
-
 <aside class = "warning">
-<code>TWheel_odom_rotation</code> must use two parallel wheel encoders.
+<code>TWheel_odom_rotation</code> has unique and specific restrictions. Please go to its section for more details.
 </aside>
 
 <p><code>odom_rotation</code> child classes provide two functions for the end user:</p>
@@ -480,7 +475,7 @@ prosv5 conduct apply greatapi
 </code></pre></div>
 <p><code>TWheel_odom_rotation</code> provides rotational odometry through usage of parallel wheels mounted onto encoders.</p>
 
-<aside class = 'warning>
+<aside class = 'warning'>
 It must be noted that TWheel objects must be constructed with the new keyword, in order to ensure that they exist in memory. The constructor takes TWheels in pointer form, meaning that you need to make TWheel* pointers instead of TWheels. The positive direction of travel must be forwards in your TWheel constructors.
 </aside>
 
