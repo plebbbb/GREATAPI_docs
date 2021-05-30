@@ -59,7 +59,7 @@ Integration drift is a phenomenon commonly found in inertial sensors. Inertial s
 
 There are two problems with this approach that form what we call integration drift.
   
-* Calculation inaccuracies cannot be removed, and can(and will) add up until the sensor is very inaccurate
+* Inaccuracies cannot be removed, and can(and will) add up until the sensor is very inaccurate
 * The integration process of converting measurements upscales any sensor inaccuracies.
   * Incidentally, this is why most vex libraries don't provide the feature to calculate position using the IMU. To get position data, one needs to integrate twice(acceleration -> velocity -> position), greatly reducing accuracy. Heading data only needs one integration(angular velocity -> heading), which isn't as brutal.
 
