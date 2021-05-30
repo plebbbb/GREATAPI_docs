@@ -460,10 +460,11 @@ prosv5 conduct apply greatapi
 <p>Example</p>
 </blockquote>
 <div class="highlight"><pre class="highlight cpp tab-cpp"><code>  <span class="c1">//TWheel is an abstract class. You should be using the constructor of specific TWheels</span>
-  <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">leftwheel</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TWheel_Motor</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">E_MOTOR_GEARSET_18</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span> <span class="mf">2.75</span><span class="p">);</span> <span class="c1">//200RPM motor connected to 2.75 inch wheel</span>
+  <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">leftwheel</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TWheel_Motor</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">E_MOTOR_GEARSET_18</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span> <span class="mf">2.75</span><span class="p">);</span> <span class="c1">//V5 motor, 200RPM, reversed, 2.75in wheel</span>
 
   <span class="c1">//For information on TWheel, please see the TWheel section of the site.</span>
-  <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">rightwheel</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TWheel_RotationSensor</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span> <span class="c1">//Rotation sensor connected to 4 inch wheel</span>
+  <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">rightwheel</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TWheel_RotationSensor</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span> <span class="c1">//V5 rotation sensor, not reversed, 4in wheel</span>
+  <span class="c1">//note that we are making TWheel* (TWheel pointers), not TWheels.</span>
 
   <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">TWheel_odom_rotation</span> <span class="n">example</span> <span class="o">=</span> <span class="o">*</span><span class="k">new</span> <span class="nf">TWheel_odom_rotation</span><span class="p">(</span><span class="n">leftwheel</span><span class="p">,</span><span class="n">rightwheel</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span> <span class="c1">//15 inches between</span>
 
@@ -473,13 +474,19 @@ prosv5 conduct apply greatapi
     <span class="n">pros</span><span class="o">::</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//10ms delay</span>
   <span class="p">}</span>
 </code></pre></div>
-<p><code>TWheel_odom_rotation</code> provides rotational odometry through usage of parallel wheels mounted onto encoders.</p>
+<p><code>TWheel_odom_rotation</code> provides rotational odometry through usage of two parallel wheels mounted onto some type encoder.</p>
 
 <aside class = 'warning'>
 It must be noted that TWheel objects must be constructed with the new keyword, in order to ensure that they exist in memory. The constructor takes TWheels in pointer form, meaning that you need to make TWheel* pointers instead of TWheels. The positive direction of travel must be forwards in your TWheel constructors.
 </aside>
 
 <p>By comparing the traveled distances between two parallel wheels, it is possible to determine the relative distance from their starting orientations. We can logically explain this by noting that two parallel wheels will always traverse the same distance in translations. Therefore, any difference in their travel must be from rotations. </p>
+
+<p>The mathematical expression to determine this distance is the following:</p>
+
+<p><strong>Angle from start(in radians) = (distance of right wheel - distance of left wheel) / (distance between wheels)</strong> </p>
+
+<p>This yields positive angles for CCW rotations, and negative angles for CW rotations.</p>
 
 <aside class = 'notice'>
 The wheels can be mounted anywhere on the robot, even asymetrically, as long as they are parallel. The <code>dist_btwn</code> parameter needs the distance between the wheels only in the axis perpendicular to the travel direction of the wheel.
