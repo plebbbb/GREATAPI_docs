@@ -100,10 +100,10 @@ Supposedly, there is a method of canceling out inertial drift with the same mode
   }
 ```
   
-<code>TWheel_odom_rotation</code> provides rotational odometry through usage of two parallel wheels mounted onto some type encoder.
+<code>TWheel_odom_rotation</code> provides rotational odometry through usage of two parallel wheels mounted onto some type of encoder.
 
 <aside class = 'warning'>
-It must be noted that TWheel objects must be constructed with the new keyword, in order to ensure that they exist in memory. The constructor takes TWheels in pointer form, meaning that you need to make TWheel* pointers instead of TWheels. The positive direction of travel must be forwards in your TWheel constructors.
+TWheel objects must be constructed with the new keyword in order to ensure that they exist in memory as the class doesnt store them. The constructor takes TWheels in pointer form, meaning that you need to make TWheel* pointers instead of TWheels. The positive direction of travel must be forwards in your TWheel constructors.
 </aside>
 
 By comparing the traveled distances between two parallel wheels, it is possible to determine the relative distance from their starting orientations. We can logically explain this by noting that two parallel wheels will always traverse the same distance in translations. Therefore, any difference in their travel must be from rotations. 
