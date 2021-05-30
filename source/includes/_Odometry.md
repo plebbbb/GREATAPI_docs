@@ -57,11 +57,11 @@ It provides the capability to counteract integration drift via an automatic scal
 
 Integration drift is a phenomenon commonly found in inertial sensors. Inertial sensors measure the acceleration, and angular velocity of the robot at any point in time. To convert these values into more useful measurements like speed, heading, or position, we must use a technique known as integration. While we don't know where the robot actually is with these sensor values, we can assume that it starts at some fixed state(like not moving). From there, we can convert our accelerations and angular velocities into velocity, position, and heading changes. These can be added to the previous calculated position to get the current position.
 
-There are two problems with this approach that form what we call integration drift.
-  
-* Inaccuracies cannot be removed, and can(and will) add up until the sensor is very inaccurate
-* The integration process of converting measurements upscales any sensor inaccuracies.
-  * Incidentally, this is why most vex libraries don't provide the feature to calculate position using the IMU. To get position data, one needs to integrate twice(acceleration -> velocity -> position), greatly reducing accuracy. Heading data only needs one integration(angular velocity -> heading), which isn't as brutal.
+The problem with this approach is obvious - Inaccuracies cannot be removed, and can add up until the sensor is very inaccurate.
+
+<alert class = 'notice'> 
+Incidentally, this is why most vex libraries don't provide the feature to calculate position using the IMU. To get position data, one needs to compound in two layers(acceleration -> velocity -> position), meaning that any inaccuracy in velocity will produce an unstoppable increase in position. Heading data only needs one compounding step(angular velocity -> heading), so this situation doesn't occur.
+</alert>
 
 A quick and quite dirty way of compensating for this is to just scale the total degrees traveled by a hard set multiplier. One can experimentally determine a multiplier just by spinning the robot a known amount of degrees, and then dividing the known value by the sensor reported angle. Spinning over 10 rotations is suggested to minimize inaccuracy in determining the real traveled angle of the robot.
 
