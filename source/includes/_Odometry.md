@@ -41,8 +41,8 @@ applyOffset(SRAD real) | Calibrates odometry output to match that of the real an
 ```cpp
   greatapi::odometry::IMU_odom_rotation example(15, 1.01); //IMU on port 15, 101% drift compensation factor
   while(true){
-    SRAD currentangle = example.get_heading(); //get current heading
-    System.out.println(currentangle); //print angle on terminal
+    greatapi::SRAD currentangle = example.get_heading(); //get current heading
+    cout << currentangle; //print angle on terminal
     pros::delay(10); //10ms delay
   }
 ```
@@ -57,7 +57,7 @@ It provides the capability to counteract integration drift via an automatic scal
 
 Integration drift is a phenomenon commonly found in inertial sensors. Inertial sensors measure the acceleration, and angular velocity of the robot at any point in time. To convert these values into more useful measurements like speed, heading, or position, we must use a technique known as integration. While we don't know where the robot actually is with these sensor values, we can assume that it starts at some fixed state(like not moving). From there, we can convert our accelerations and angular velocities into velocity, position, and heading changes. These can be added to the previous calculated position to get the current position.
 
-The problem with this approach is obvious - Inaccuracies cannot be removed, and can add up until the sensor is very inaccurate.
+The problem with this approach is obvious - Inaccuracies cannot be removed, and can add up until the sensor is inaccurate.
 
 <alert class = 'notice'> 
 Incidentally, this is why most vex libraries don't provide the feature to calculate position using the IMU. To get position data, one needs to compound in two layers(acceleration -> velocity -> position), meaning that any inaccuracy in velocity will produce an unstoppable increase in position. Heading data only needs one compounding step(angular velocity -> heading), so this situation doesn't occur.
@@ -94,7 +94,7 @@ Supposedly, there is a method of canceling out inertial drift with the same mode
   greatapi::odometry::TWheel_odom_rotation example = *new greatapi::odometry::TWheel_odom_rotation(leftwheel,rightwheel,15) //15 inches between
 
   while(true){
-    SRAD currentangle = example.get_heading(); //get current heading
+    greatapi::SRAD currentangle = example.get_heading(); //get current heading
     cout << currentangle; //print angle on terminal
     pros::delay(10); //10ms delay
   }
