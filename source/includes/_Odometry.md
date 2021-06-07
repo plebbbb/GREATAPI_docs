@@ -85,17 +85,17 @@ Supposedly, there is a method of canceling out inertial drift with the same mode
   
 ```cpp
   //TWheel is an abstract class. You should be using the constructor of specific TWheels
-  greatapi::TWheel* leftwheel = new TWheel_Motor(5, E_MOTOR_GEARSET_18,true, 2.75); //V5 motor, 200RPM, reversed, 2.75in wheel
+  greatapi::TWheel* leftwheel = new greatapi::TWheel_Motor(5, pros::E_MOTOR_GEARSET_18,true, 2.75); //V5 motor, 200RPM, reversed, 2.75in wheel
 
   //For information on TWheel, please see the TWheel section of the site.
-  greatapi::TWheel* rightwheel = new TWheel_RotationSensor(4, false, 4); //V5 rotation sensor, not reversed, 4in wheel
+  greatapi::TWheel* rightwheel = new greatapi::TWheel_RotationSensor(4, false, 4); //V5 rotation sensor, not reversed, 4in wheel
   //note that we are making TWheel* (TWheel pointers), not TWheels.
  
-  greatapi::odometry::TWheel_odom_rotation example = *new TWheel_odom_rotation(leftwheel,rightwheel,15) //15 inches between
+  greatapi::odometry::TWheel_odom_rotation example = *new greatapi::odometry::TWheel_odom_rotation(leftwheel,rightwheel,15) //15 inches between
 
   while(true){
     SRAD currentangle = example.get_heading(); //get current heading
-    System.out.println(currentangle); //print angle on terminal
+    cout << currentangle; //print angle on terminal
     pros::delay(10); //10ms delay
   }
 ```
