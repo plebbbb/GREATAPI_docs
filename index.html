@@ -419,8 +419,8 @@ prosv5 conduct apply greatapi
 </blockquote>
 <div class="highlight"><pre class="highlight cpp tab-cpp"><code>  <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">IMU_odom_rotation</span> <span class="nf">example</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">);</span> <span class="c1">//IMU on port 15, 101% drift compensation factor</span>
   <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>
-    <span class="n">SRAD</span> <span class="n">currentangle</span> <span class="o">=</span> <span class="n">example</span><span class="p">.</span><span class="n">get_heading</span><span class="p">();</span> <span class="c1">//get current heading</span>
-    <span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">currentangle</span><span class="p">);</span> <span class="c1">//print angle on terminal</span>
+    <span class="n">greatapi</span><span class="o">::</span><span class="n">SRAD</span> <span class="n">currentangle</span> <span class="o">=</span> <span class="n">example</span><span class="p">.</span><span class="n">get_heading</span><span class="p">();</span> <span class="c1">//get current heading</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">currentangle</span><span class="p">;</span> <span class="c1">//print angle on terminal</span>
     <span class="n">pros</span><span class="o">::</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//10ms delay</span>
   <span class="p">}</span>
 </code></pre></div>
@@ -434,7 +434,7 @@ prosv5 conduct apply greatapi
 <h3 id='integration-drift'>Integration drift</h3>
 <p>Integration drift is a phenomenon commonly found in inertial sensors. Inertial sensors measure the acceleration, and angular velocity of the robot at any point in time. To convert these values into more useful measurements like speed, heading, or position, we must use a technique known as integration. While we don&#39;t know where the robot actually is with these sensor values, we can assume that it starts at some fixed state(like not moving). From there, we can convert our accelerations and angular velocities into velocity, position, and heading changes. These can be added to the previous calculated position to get the current position.</p>
 
-<p>The problem with this approach is obvious - Inaccuracies cannot be removed, and can add up until the sensor is very inaccurate.</p>
+<p>The problem with this approach is obvious - Inaccuracies cannot be removed, and can add up until the sensor is inaccurate.</p>
 
 <p><alert class = 'notice'> 
 Incidentally, this is why most vex libraries don&#39;t provide the feature to calculate position using the IMU. To get position data, one needs to compound in two layers(acceleration -&gt; velocity -&gt; position), meaning that any inaccuracy in velocity will produce an unstoppable increase in position. Heading data only needs one compounding step(angular velocity -&gt; heading), so this situation doesn&#39;t occur.
@@ -464,7 +464,7 @@ Incidentally, this is why most vex libraries don&#39;t provide the feature to ca
   <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">TWheel_odom_rotation</span> <span class="n">example</span> <span class="o">=</span> <span class="o">*</span><span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">TWheel_odom_rotation</span><span class="p">(</span><span class="n">leftwheel</span><span class="p">,</span><span class="n">rightwheel</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span> <span class="c1">//15 inches between</span>
 
   <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>
-    <span class="n">SRAD</span> <span class="n">currentangle</span> <span class="o">=</span> <span class="n">example</span><span class="p">.</span><span class="n">get_heading</span><span class="p">();</span> <span class="c1">//get current heading</span>
+    <span class="n">greatapi</span><span class="o">::</span><span class="n">SRAD</span> <span class="n">currentangle</span> <span class="o">=</span> <span class="n">example</span><span class="p">.</span><span class="n">get_heading</span><span class="p">();</span> <span class="c1">//get current heading</span>
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">currentangle</span><span class="p">;</span> <span class="c1">//print angle on terminal</span>
     <span class="n">pros</span><span class="o">::</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//10ms delay</span>
   <span class="p">}</span>
