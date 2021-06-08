@@ -117,3 +117,59 @@ This yields positive angles for CCW rotations, and negative angles for CW rotati
 <aside class = 'notice'>
 The wheels can be mounted anywhere on the robot, even asymetrically, as long as they are parallel. The <code>dist_btwn</code> parameter needs the distance between the wheels only in the axis perpendicular to the travel direction of the wheel.
 </aside>
+
+## Positional Odometry
+
+GREATAPI also provides the capability to determine the absolute position of a robot in all relevant axises for a vex game(X, Y, and heading)
+
+
+> Prototype
+  
+```cpp
+  greatapi::odometry::odometry(TWheel* X, distance X_to_ctr, TWheel* Y, distance Y_to_ctr, odom_rotation* rotation)
+```
+
+> Example
+  
+```cpp
+	//TWheel is an abstract class. You should be using the constructor of specific TWheels
+	greatapi::TWheel* leftwheel = new greatapi::TWheel_Motor(5, pros::E_MOTOR_GEARSET_18,true, 2.75); //V5 motor, 200RPM, reversed, 2.75in wheel
+
+	//For information on TWheel, please see the TWheel section of the site.
+	greatapi::TWheel* rightwheel = new greatapi::TWheel_RotationSensor(4, false, 4); //V5 rotation sensor, not reversed, 4in wheel
+	//note that we are making TWheel* (TWheel pointers), not TWheels.
+
+	greatapi::TWheel* rearwheel = new greatapi::TWheel_ADIEncoder('A','B',false,2.75); //V4 rotation encoder, not reversed, 2.75in wheel
+
+	greatapi::odometry::TWheel_odom_rotation example = *new greatapi::odometry::TWheel_odom_rotation(leftwheel,rightwheel,15); //15 inches between the wheels
+
+	greatapi::odometry::odometry test(leftwheel, greatapi::inches(7.5), rearwheel, greatapi::inches(8), &example); 
+  //left wheel is 7.5in from center of rotation, rear wheel is 8 inches away.
+
+  greatapi::position location(greatapi::coord(0,0),SRAD(0)); //the position object storing the location of our robot
+	
+  //this loop is probably the update pattern you would want to use for your projects.
+  while(true){ 
+		location = test.calculateposition(location);
+    cout << location.x << " " << location.y << " " << location.angle; //print X, Y and angle after each test
+    pros::delay(10); //10ms wait before updating position.
+	}
+```
+  
+
+### Configuration
+Positional odometry requires a set of two tracking wheels, positioned 90 degrees away from each other, as well as any valid <code>odom_rotation</code> object. In addition, the distance of each tracking wheel from the center of rotation of the robot is required.
+
+<aside class = "notice">
+The same wheel encoder can be used for both <code>odom_rotation</code> and <code>odometry</code>. A pure wheel encoder setup only needs 3 wheel encoders.
+</aside>
+
+#### TBD: ADD IMAGE HERE TO EXPLAIN CONFIG
+
+<code>odom_rotation</code> child classes provide a single function for the end user:
+
+Function | Purpose | Output |
+-------- | ------- | ------ |
+calculateposition(position initial) | Returns absolute position and heading of robot | <code>position</code> object
+
+#### TBD: EXPLAIN HOW IT WORKS
