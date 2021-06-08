@@ -320,6 +320,9 @@
                   <li>
                     <a href="#rotational-odometry" class="toc-h2 toc-link" data-title="Rotational Odometry">Rotational Odometry</a>
                   </li>
+                  <li>
+                    <a href="#positional-odometry" class="toc-h2 toc-link" data-title="Positional Odometry">Positional Odometry</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -486,7 +489,62 @@ TWheel objects must be constructed with the new keyword in order to ensure that 
 <aside class = 'notice'>
 The wheels can be mounted anywhere on the robot, even asymetrically, as long as they are parallel. The <code>dist_btwn</code> parameter needs the distance between the wheels only in the axis perpendicular to the travel direction of the wheel.
 </aside>
-<h1 id='errors'>Errors</h1>
+<h2 id='positional-odometry'>Positional Odometry</h2>
+<p>GREATAPI also provides the capability to determine the absolute position of a robot in all relevant axises for a vex game(X, Y, and heading)</p>
+
+<blockquote>
+<p>Prototype</p>
+</blockquote>
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code>  <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">odometry</span><span class="p">(</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">X</span><span class="p">,</span> <span class="n">distance</span> <span class="n">X_to_ctr</span><span class="p">,</span> <span class="n">TWheel</span><span class="o">*</span> <span class="n">Y</span><span class="p">,</span> <span class="n">distance</span> <span class="n">Y_to_ctr</span><span class="p">,</span> <span class="n">odom_rotation</span><span class="o">*</span> <span class="n">rotation</span><span class="p">)</span>
+</code></pre></div>
+<blockquote>
+<p>Example</p>
+</blockquote>
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code>    <span class="c1">//TWheel is an abstract class. You should be using the constructor of specific TWheels</span>
+    <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">leftwheel</span> <span class="o">=</span> <span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel_Motor</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">pros</span><span class="o">::</span><span class="n">E_MOTOR_GEARSET_18</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span> <span class="mf">2.75</span><span class="p">);</span> <span class="c1">//V5 motor, 200RPM, reversed, 2.75in wheel</span>
+
+    <span class="c1">//For information on TWheel, please see the TWheel section of the site.</span>
+    <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">rightwheel</span> <span class="o">=</span> <span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel_RotationSensor</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span> <span class="c1">//V5 rotation sensor, not reversed, 4in wheel</span>
+    <span class="c1">//note that we are making TWheel* (TWheel pointers), not TWheels.</span>
+
+    <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel</span><span class="o">*</span> <span class="n">rearwheel</span> <span class="o">=</span> <span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">TWheel_ADIEncoder</span><span class="p">(</span><span class="sc">'A'</span><span class="p">,</span><span class="sc">'B'</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mf">2.75</span><span class="p">);</span> <span class="c1">//V4 rotation encoder, not reversed, 2.75in wheel</span>
+
+    <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">TWheel_odom_rotation</span> <span class="n">example</span> <span class="o">=</span> <span class="o">*</span><span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">TWheel_odom_rotation</span><span class="p">(</span><span class="n">leftwheel</span><span class="p">,</span><span class="n">rightwheel</span><span class="p">,</span><span class="mi">15</span><span class="p">);</span> <span class="c1">//15 inches between the wheels</span>
+
+    <span class="n">greatapi</span><span class="o">::</span><span class="n">odometry</span><span class="o">::</span><span class="n">odometry</span> <span class="nf">test</span><span class="p">(</span><span class="n">leftwheel</span><span class="p">,</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">inches</span><span class="p">(</span><span class="mf">7.5</span><span class="p">),</span> <span class="n">rearwheel</span><span class="p">,</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">inches</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">example</span><span class="p">);</span> 
+  <span class="c1">//left wheel is 7.5in from center of rotation, rear wheel is 8 inches away.</span>
+
+  <span class="n">greatapi</span><span class="o">::</span><span class="n">position</span> <span class="nf">location</span><span class="p">(</span><span class="n">greatapi</span><span class="o">::</span><span class="n">coord</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">SRAD</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span> <span class="c1">//the position object storing the location of our robot</span>
+
+  <span class="c1">//this loop is probably the update pattern you would want to use for your projects.</span>
+  <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span> 
+        <span class="n">location</span> <span class="o">=</span> <span class="n">test</span><span class="p">.</span><span class="n">calculateposition</span><span class="p">(</span><span class="n">location</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">location</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">location</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">location</span><span class="p">.</span><span class="n">angle</span><span class="p">;</span> <span class="c1">//print X, Y and angle after each test</span>
+    <span class="n">pros</span><span class="o">::</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//10ms wait before updating position.</span>
+    <span class="p">}</span>
+</code></pre></div><h3 id='configuration'>Configuration</h3>
+<p>Positional odometry requires a set of two tracking wheels, positioned 90 degrees away from each other, as well as any valid <code>odom_rotation</code> object. In addition, the distance of each tracking wheel from the center of rotation of the robot is required.</p>
+
+<aside class = "notice">
+The same wheel encoder can be used for both <code>odom_rotation</code> and <code>odometry</code>. A pure wheel encoder setup only needs 3 wheel encoders.
+</aside>
+<h4 id='tbd-add-image-here-to-explain-config'>TBD: ADD IMAGE HERE TO EXPLAIN CONFIG</h4>
+<p><code>odom_rotation</code> child classes provide a single function for the end user:</p>
+
+<table><thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+<th>Output</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>calculateposition(position initial)</td>
+<td>Returns absolute position and heading of robot</td>
+<td><code>position</code> object</td>
+</tr>
+</tbody></table>
+<h4 id='tbd-explain-how-it-works'>TBD: EXPLAIN HOW IT WORKS</h4><h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
 </aside>
