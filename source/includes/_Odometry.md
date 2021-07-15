@@ -60,7 +60,7 @@ Integration drift is a phenomenon commonly found in inertial sensors. Inertial s
 The problem with this approach is obvious - Inaccuracies cannot be removed, and can add up until the sensor is inaccurate.
 
 <alert class = 'notice'> 
-Incidentally, this is why most vex libraries don't provide the feature to calculate position using the IMU. To get position data, one needs to compound in two layers(acceleration -> velocity -> position), meaning that any inaccuracy in velocity will produce an unstoppable increase in position. Heading data only needs one compounding step(angular velocity -> heading), so this situation doesn't occur.
+Incidentally, this is why most vex libraries don't provide the feature to calculate position using the IMU. To get position data, one needs to compound in two layers(acceleration -> velocity -> position), meaning that any inaccuracy in velocity will indefinitely increase inaccuracy in position. Heading data only needs one compounding step(angular velocity -> heading), so this infinite compounding situation doesn't occur.
 </alert>
 
 A quick and quite dirty way of compensating for this is to just scale the total degrees traveled by a hard set multiplier. One can experimentally determine a multiplier just by spinning the robot a known amount of degrees, and then dividing the known value by the sensor reported angle. Spinning over 10 rotations is suggested to minimize inaccuracy in determining the real traveled angle of the robot.
