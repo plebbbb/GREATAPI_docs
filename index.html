@@ -326,6 +326,17 @@
               </ul>
           </li>
           <li>
+            <a href="#control-loops" class="toc-h1 toc-link" data-title="Control Loops">Control Loops</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#proportional-integral-and-derivative-controllers" class="toc-h2 toc-link" data-title="Proportional, Integral, and Derivative controllers">Proportional, Integral, and Derivative controllers</a>
+                  </li>
+                  <li>
+                    <a href="#unified-control-loop" class="toc-h2 toc-link" data-title="Unified Control Loop">Unified Control Loop</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
           </li>
       </ul>
@@ -544,7 +555,90 @@ The same wheel encoder can be used for both <code>odom_rotation</code> and <code
 <td><code>position</code> object</td>
 </tr>
 </tbody></table>
-<h4 id='tbd-explain-how-it-works'>TBD: EXPLAIN HOW IT WORKS</h4><h1 id='errors'>Errors</h1>
+<h4 id='tbd-explain-how-it-works'>TBD: EXPLAIN HOW IT WORKS</h4><h1 id='control-loops'>Control Loops</h1>
+<p>GREATAPI provides PID control loops to assist you in developing PID control systems for your robot. </p>
+<h2 id='proportional-integral-and-derivative-controllers'>Proportional, Integral, and Derivative controllers</h2>
+<p>The controllers GREATAPI offers are separate P, I, and D controllers throught the <code>controlelement</code> class. 
+Each of the three controllers have their own child class of controlelement. </p>
+
+<table><thead>
+<tr>
+<th>Class Name</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Proportional</td>
+</tr>
+<tr>
+<td>Integral</td>
+</tr>
+<tr>
+<td>Derivative</td>
+</tr>
+</tbody></table>
+
+<p><code>controlelement</code> child classes provide one function to the user: </p>
+
+<table><thead>
+<tr>
+<th>Function</th>
+<th>Parameters</th>
+<th>Purpose</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>compute(double target, double current)</td>
+<td>Target value and current value</td>
+<td>Returns the corresponding component of the control loop</td>
+</tr>
+</tbody></table>
+
+<aside class = "warning">
+Note that <code>controlelement</code> itself does not compute any outputs. Please contruct one of the available child classes instead when programming your robot.  
+</aside>
+<h3 id='proportional-controller'>Proportional controller</h3><h2 id='unified-control-loop'>Unified Control Loop</h2>
+<blockquote>
+<p>Prototype</p>
+</blockquote>
+<div class="highlight"><pre class="highlight plaintext"><code>//Modular control loop, computes values for a set of control elements
+struct control_loop{
+    std::vector&lt;controlelement*&gt; elementset;
+    double maxcap;
+    double mincap;
+    //if you dont like caps just set them really high, like +-INT_MAX or something
+    control_loop(std::vector&lt;controlelement*&gt; val, std::pair&lt;double,double&gt; caps):elementset(val){
+        maxcap = std::get&lt;0&gt;(caps);
+        mincap = std::get&lt;1&gt;(caps);
+    }
+    double update(double target, double current){
+        double returnval = 0;
+        //no enhanced for to minimize risk of sketchy copying issues
+        for (int i = 0; i &lt; elementset.size(); i++){
+            returnval += elementset[i]-&gt;compute(target,current);
+        }
+        return (returnval &lt;= maxcap) ? ((returnval &gt;= mincap) ? returnval : mincap) : maxcap;
+    }
+};
+</code></pre></div>
+<blockquote>
+<p>Example</p>
+</blockquote>
+<div class="highlight"><pre class="highlight plaintext"><code>//create the new controlelements
+greatapi::controlelement *PPos = new greatapi::Proportional(20.0, std::pair(__DBL_MAX__, __DBL_MIN__));
+greatapi::controlelement *IPos = new greatapi::Integral(0, std::pair(__DBL_MAX__, __DBL_MIN__));
+greatapi::controlelement *DPos = new greatapi::Derivative(0, std::pair(__DBL_MAX__, __DBL_MIN__));
+
+//add the controlements to a new std::vector
+std::vector&lt;greatapi::controlelement *&gt; PIDPosElements;
+PIDPosElements.push_back(PPos);
+PIDPosElements.push_back(IPos);
+PIDPosElements.push_back(DPos);
+
+//Create the control_loop unified control loop
+greatapi::control_loop PIDPos(PIDPosElements, std::pair(INT32_MAX, INT32_MIN));
+</code></pre></div>
+<p>The Unified Control Loop computes the final outputs for a PID controller with any amount of P, I, and D <code>controllerelements</code> by summing their outputs together.</p>
+<h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
 </aside>
