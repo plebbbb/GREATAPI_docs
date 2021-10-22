@@ -28,7 +28,6 @@ Note that <code>controlelement</code> itself does not compute any outputs. Pleas
 ## Unified Control Loop
 
 > Prototype
-
 ```
 //Modular control loop, computes values for a set of control elements
 struct control_loop{
@@ -52,7 +51,6 @@ struct control_loop{
 ```
 
 > Example
-
 ```
 //create the new controlelements
 greatapi::controlelement *PPos = new greatapi::Proportional(20.0, std::pair(__DBL_MAX__, __DBL_MIN__));
@@ -68,6 +66,7 @@ PIDPosElements.push_back(DPos);
 //Create the control_loop unified control loop
 greatapi::control_loop PIDPos(PIDPosElements, std::pair(INT32_MAX, INT32_MIN));
 ```
+
 
 The Unified Control Loop computes the final outputs for a PID controller with any amount of P, I, and D <code>controllerelements</code> by summing their outputs together.
 
