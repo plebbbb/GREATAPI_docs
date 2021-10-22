@@ -598,9 +598,9 @@ Note that <code>controlelement</code> itself does not compute any outputs. Pleas
 </aside>
 <h3 id='proportional-controller'>Proportional controller</h3><h2 id='unified-control-loop'>Unified Control Loop</h2>
 <blockquote>
-<p>Prototype</p>
-</blockquote>
-<div class="highlight"><pre class="highlight plaintext"><code>//Modular control loop, computes values for a set of control elements
+<p>Prototype
+<code>
+//Modular control loop, computes values for a set of control elements
 struct control_loop{
     std::vector&lt;controlelement*&gt; elementset;
     double maxcap;
@@ -619,24 +619,26 @@ struct control_loop{
         return (returnval &lt;= maxcap) ? ((returnval &gt;= mincap) ? returnval : mincap) : maxcap;
     }
 };
-</code></pre></div>
-<blockquote>
-<p>Example</p>
-</blockquote>
-<div class="highlight"><pre class="highlight plaintext"><code>//create the new controlelements
-greatapi::controlelement *PPos = new greatapi::Proportional(20.0, std::pair(__DBL_MAX__, __DBL_MIN__));
-greatapi::controlelement *IPos = new greatapi::Integral(0, std::pair(__DBL_MAX__, __DBL_MIN__));
-greatapi::controlelement *DPos = new greatapi::Derivative(0, std::pair(__DBL_MAX__, __DBL_MIN__));
+</code></p>
 
-//add the controlements to a new std::vector
-std::vector&lt;greatapi::controlelement *&gt; PIDPosElements;
+<p>Example
+```
+//create the new controlelements
+greatapi::controlelement *PPos = new greatapi::Proportional(20.0, std::pair(<strong>DBL_MAX</strong>, <strong>DBL_MIN</strong>));
+greatapi::controlelement *IPos = new greatapi::Integral(0, std::pair(<strong>DBL_MAX</strong>, <strong>DBL_MIN</strong>));
+greatapi::controlelement *DPos = new greatapi::Derivative(0, std::pair(<strong>DBL_MAX</strong>, <strong>DBL_MIN</strong>));</p>
+</blockquote>
+
+<p>//add the controlements to a new std::vector
+std::vector<greatapi::controlelement *> PIDPosElements;
 PIDPosElements.push_back(PPos);
 PIDPosElements.push_back(IPos);
-PIDPosElements.push_back(DPos);
+PIDPosElements.push_back(DPos);</p>
 
-//Create the control_loop unified control loop
+<p>//Create the control_loop unified control loop
 greatapi::control_loop PIDPos(PIDPosElements, std::pair(INT32_MAX, INT32_MIN));
-</code></pre></div>
+```</p>
+
 <p>The Unified Control Loop computes the final outputs for a PID controller with any amount of P, I, and D <code>controllerelements</code> by summing their outputs together.</p>
 <h1 id='errors'>Errors</h1>
 <aside class="notice">
