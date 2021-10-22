@@ -28,6 +28,7 @@ Note that <code>controlelement</code> itself does not compute any outputs. Pleas
 ## Unified Control Loop
 
 > Prototype
+
 ```
 //Modular control loop, computes values for a set of control elements
 struct control_loop{
@@ -51,6 +52,7 @@ struct control_loop{
 ```
 
 > Example
+
 ```
 //create the new controlelements
 greatapi::controlelement *PPos = new greatapi::Proportional(20.0, std::pair(__DBL_MAX__, __DBL_MIN__));
