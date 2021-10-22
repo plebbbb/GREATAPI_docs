@@ -600,42 +600,42 @@ Note that <code>controlelement</code> itself does not compute any outputs. Pleas
 <blockquote>
 <p>Prototype</p>
 </blockquote>
-<div class="highlight"><pre class="highlight plaintext"><code>//Modular control loop, computes values for a set of control elements
-struct control_loop{
-    std::vector&lt;controlelement*&gt; elementset;
-    double maxcap;
-    double mincap;
-    //if you dont like caps just set them really high, like +-INT_MAX or something
-    control_loop(std::vector&lt;controlelement*&gt; val, std::pair&lt;double,double&gt; caps):elementset(val){
-        maxcap = std::get&lt;0&gt;(caps);
-        mincap = std::get&lt;1&gt;(caps);
-    }
-    double update(double target, double current){
-        double returnval = 0;
-        //no enhanced for to minimize risk of sketchy copying issues
-        for (int i = 0; i &lt; elementset.size(); i++){
-            returnval += elementset[i]-&gt;compute(target,current);
-        }
-        return (returnval &lt;= maxcap) ? ((returnval &gt;= mincap) ? returnval : mincap) : maxcap;
-    }
-};
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code><span class="c1">//Modular control loop, computes values for a set of control elements</span>
+<span class="k">struct</span> <span class="nc">control_loop</span><span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">controlelement</span><span class="o">*&gt;</span> <span class="n">elementset</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">maxcap</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">mincap</span><span class="p">;</span>
+    <span class="c1">//if you dont like caps just set them really high, like +-INT_MAX or something</span>
+    <span class="n">control_loop</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">controlelement</span><span class="o">*&gt;</span> <span class="n">val</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">caps</span><span class="p">)</span><span class="o">:</span><span class="n">elementset</span><span class="p">(</span><span class="n">val</span><span class="p">){</span>
+        <span class="n">maxcap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+        <span class="n">mincap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">double</span> <span class="n">update</span><span class="p">(</span><span class="kt">double</span> <span class="n">target</span><span class="p">,</span> <span class="kt">double</span> <span class="n">current</span><span class="p">){</span>
+        <span class="kt">double</span> <span class="n">returnval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="c1">//no enhanced for to minimize risk of sketchy copying issues</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">elementset</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">returnval</span> <span class="o">+=</span> <span class="n">elementset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">compute</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="n">current</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">returnval</span> <span class="o">&lt;=</span> <span class="n">maxcap</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">returnval</span> <span class="o">&gt;=</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">?</span> <span class="n">returnval</span> <span class="o">:</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">:</span> <span class="n">maxcap</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
 </code></pre></div>
 <blockquote>
 <p>Example</p>
 </blockquote>
-<div class="highlight"><pre class="highlight plaintext"><code>//create the new controlelements
-greatapi::controlelement *PPos = new greatapi::Proportional(20.0, std::pair(__DBL_MAX__, __DBL_MIN__));
-greatapi::controlelement *IPos = new greatapi::Integral(0, std::pair(__DBL_MAX__, __DBL_MIN__));
-greatapi::controlelement *DPos = new greatapi::Derivative(0, std::pair(__DBL_MAX__, __DBL_MIN__));
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code><span class="c1">//create the new controlelements</span>
+<span class="n">greatapi</span><span class="o">::</span><span class="n">controlelement</span> <span class="o">*</span><span class="n">PPos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">Proportional</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="p">(</span><span class="n">__DBL_MAX__</span><span class="p">,</span> <span class="n">__DBL_MIN__</span><span class="p">));</span>
+<span class="n">greatapi</span><span class="o">::</span><span class="n">controlelement</span> <span class="o">*</span><span class="n">IPos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">Integral</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="p">(</span><span class="n">__DBL_MAX__</span><span class="p">,</span> <span class="n">__DBL_MIN__</span><span class="p">));</span>
+<span class="n">greatapi</span><span class="o">::</span><span class="n">controlelement</span> <span class="o">*</span><span class="n">DPos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">greatapi</span><span class="o">::</span><span class="n">Derivative</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="p">(</span><span class="n">__DBL_MAX__</span><span class="p">,</span> <span class="n">__DBL_MIN__</span><span class="p">));</span>
 
-//add the controlements to a new std::vector
-std::vector&lt;greatapi::controlelement *&gt; PIDPosElements;
-PIDPosElements.push_back(PPos);
-PIDPosElements.push_back(IPos);
-PIDPosElements.push_back(DPos);
+<span class="c1">//add the controlements to a new std::vector</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">greatapi</span><span class="o">::</span><span class="n">controlelement</span> <span class="o">*&gt;</span> <span class="n">PIDPosElements</span><span class="p">;</span>
+<span class="n">PIDPosElements</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">PPos</span><span class="p">);</span>
+<span class="n">PIDPosElements</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">IPos</span><span class="p">);</span>
+<span class="n">PIDPosElements</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">DPos</span><span class="p">);</span>
 
-//Create the control_loop unified control loop
-greatapi::control_loop PIDPos(PIDPosElements, std::pair(INT32_MAX, INT32_MIN));
+<span class="c1">//Create the control_loop unified control loop</span>
+<span class="n">greatapi</span><span class="o">::</span><span class="n">control_loop</span> <span class="nf">PIDPos</span><span class="p">(</span><span class="n">PIDPosElements</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="p">(</span><span class="n">INT32_MAX</span><span class="p">,</span> <span class="n">INT32_MIN</span><span class="p">));</span>
 </code></pre></div>
 <p>The Unified Control Loop computes the final outputs for a PID controller with any amount of P, I, and D <code>controllerelements</code> by summing their outputs together.</p>
 <h1 id='errors'>Errors</h1>
