@@ -10,7 +10,7 @@ toc_footers:
 
 includes:
   - Odometry
-  - Control Loops
+  - ControlLoops
   - errors
 
 search: true
