@@ -96,8 +96,6 @@ compute(double target, double current) | Target value and current value | Return
 Note that <code>controlelement</code> itself does not compute any outputs. Please contruct one of the available child classes instead when programming your robot.  
 </aside>
 
-### Proportional controller
-
 ## Unified Control Loop
 
 > Prototype
