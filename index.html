@@ -555,6 +555,79 @@ The same wheel encoder can be used for both <code>odom_rotation</code> and <code
 <h4 id='tbd-explain-how-it-works'>TBD: EXPLAIN HOW IT WORKS</h4><h1 id='control-loops'>Control Loops</h1>
 <p>GREATAPI provides PID control loops to assist you in developing PID control systems for your robot. </p>
 <h2 id='proportional-integral-and-derivative-controllers'>Proportional, Integral, and Derivative controllers</h2>
+<blockquote>
+<p>Prototype</p>
+</blockquote>
+<div class="highlight"><pre class="highlight cpp tab-cpp"><code><span class="k">struct</span> <span class="nc">Proportional</span><span class="o">:</span> <span class="k">public</span> <span class="n">controlelement</span><span class="p">{</span>
+    <span class="kt">double</span> <span class="n">maxcap</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">mincap</span><span class="p">;</span>
+    <span class="n">Proportional</span><span class="p">(</span><span class="kt">double</span> <span class="n">fac</span><span class="p">)</span><span class="o">:</span><span class="n">controlelement</span><span class="p">(</span><span class="n">fac</span><span class="p">){</span>
+        <span class="n">mincap</span> <span class="o">=</span> <span class="n">__DBL_MIN__</span><span class="p">;</span>
+        <span class="n">maxcap</span> <span class="o">=</span> <span class="n">__DBL_MAX__</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Proportional</span><span class="p">(</span><span class="kt">double</span> <span class="n">fac</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">caps</span><span class="p">)</span><span class="o">:</span><span class="n">controlelement</span><span class="p">(</span><span class="n">fac</span><span class="p">){</span>
+        <span class="n">maxcap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+        <span class="n">mincap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//standard offset format: target-current. This class assumes the offset is in the correct direction already</span>
+    <span class="kt">double</span> <span class="n">compute</span><span class="p">(</span><span class="kt">double</span> <span class="n">target</span><span class="p">,</span> <span class="kt">double</span> <span class="n">current</span><span class="p">){</span>
+        <span class="kt">double</span> <span class="n">rawval</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span><span class="o">-</span><span class="n">current</span><span class="p">);</span>
+        <span class="kt">double</span> <span class="n">returnval</span> <span class="o">=</span> <span class="n">factor</span><span class="o">*</span><span class="n">rawval</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">returnval</span> <span class="o">&lt;=</span> <span class="n">maxcap</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">returnval</span> <span class="o">&gt;=</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">?</span> <span class="n">returnval</span> <span class="o">:</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">:</span> <span class="n">maxcap</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Integral</span><span class="o">:</span> <span class="k">public</span> <span class="n">controlelement</span><span class="p">{</span>
+    <span class="kt">double</span> <span class="n">last</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">maxcap</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">mincap</span><span class="p">;</span>
+
+    <span class="c1">//this is NOT recommended due to integral windup</span>
+    <span class="n">Integral</span><span class="p">(</span><span class="kt">double</span> <span class="n">fac</span><span class="p">)</span><span class="o">:</span><span class="n">controlelement</span><span class="p">(</span><span class="n">fac</span><span class="p">){</span>
+        <span class="n">mincap</span> <span class="o">=</span> <span class="n">__DBL_MIN__</span><span class="p">;</span>
+        <span class="n">maxcap</span> <span class="o">=</span> <span class="n">__DBL_MAX__</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Integral</span><span class="p">(</span><span class="kt">double</span> <span class="n">fac</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">caps</span><span class="p">)</span><span class="o">:</span><span class="n">controlelement</span><span class="p">(</span><span class="n">fac</span><span class="p">){</span>
+        <span class="n">maxcap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+        <span class="n">mincap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//standard offset format: target-current. This class assumes the offset is in the correct direction already</span>
+    <span class="kt">double</span> <span class="n">compute</span><span class="p">(</span><span class="kt">double</span> <span class="n">target</span><span class="p">,</span> <span class="kt">double</span> <span class="n">current</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">target</span> <span class="o">==</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">current</span><span class="p">)</span> <span class="n">last</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">rawval</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span><span class="o">-</span><span class="n">current</span><span class="p">);</span>
+        <span class="n">last</span> <span class="o">+=</span> <span class="n">rawval</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">returnval</span> <span class="o">=</span> <span class="n">last</span><span class="o">*</span><span class="n">factor</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">returnval</span> <span class="o">&lt;=</span> <span class="n">maxcap</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">returnval</span> <span class="o">&gt;=</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">?</span> <span class="n">returnval</span> <span class="o">:</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">:</span> <span class="n">maxcap</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Derivative</span><span class="o">:</span> <span class="k">public</span> <span class="n">controlelement</span><span class="p">{</span>
+    <span class="kt">double</span> <span class="n">past</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">maxcap</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">mincap</span><span class="p">;</span>
+    <span class="n">Derivative</span><span class="p">(</span><span class="kt">double</span> <span class="n">fac</span><span class="p">)</span><span class="o">:</span><span class="n">controlelement</span><span class="p">(</span><span class="n">fac</span><span class="p">){</span>
+        <span class="n">mincap</span> <span class="o">=</span> <span class="n">__DBL_MIN__</span><span class="p">;</span>
+        <span class="n">maxcap</span> <span class="o">=</span> <span class="n">__DBL_MAX__</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Derivative</span><span class="p">(</span><span class="kt">double</span> <span class="n">fac</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">caps</span><span class="p">)</span><span class="o">:</span><span class="n">controlelement</span><span class="p">(</span><span class="n">fac</span><span class="p">){</span>
+        <span class="n">maxcap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+        <span class="n">mincap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//standard offset format: target-current. This class assumes the offset is in the correct direction already</span>
+      <span class="kt">double</span> <span class="n">compute</span><span class="p">(</span><span class="kt">double</span> <span class="n">target</span><span class="p">,</span> <span class="kt">double</span> <span class="n">current</span><span class="p">){</span>
+          <span class="kt">double</span> <span class="n">rawval</span> <span class="o">=</span> <span class="n">target</span><span class="o">-</span><span class="n">current</span><span class="p">;</span>
+          <span class="kt">double</span> <span class="n">returnval</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">rawval</span><span class="o">-</span><span class="n">past</span><span class="p">);</span>
+          <span class="n">past</span> <span class="o">=</span> <span class="n">rawval</span><span class="p">;</span>
+          <span class="k">return</span> <span class="p">(</span><span class="n">returnval</span> <span class="o">&lt;=</span> <span class="n">maxcap</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">returnval</span> <span class="o">&gt;=</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">?</span> <span class="n">returnval</span> <span class="o">:</span> <span class="n">mincap</span><span class="p">)</span> <span class="o">:</span> <span class="n">maxcap</span><span class="p">;</span>
+      <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
 <p>The controllers GREATAPI offers are separate P, I, and D controllers throught the <code>controlelement</code> class. 
 Each of the three controllers have their own child class of controlelement. </p>
 
