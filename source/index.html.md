@@ -11,7 +11,6 @@ toc_footers:
 includes:
   - Odometry
   - ControlLoops
-  - errors
 
 search: true
 
@@ -32,7 +31,7 @@ Open up a console on the folder you've downloaded GREATAPI to, and enter the fol
 prosv5 conduct fetch greatapi@[whatever version we are on].zip
 `
 
-From here, GREATAPI should be addable on the upgrade tab of the PROS editor. You may have to manually type in the name for it to be detected. If GREATAPI isn't there, open up a console in the directory of your PROs project(the folder with project.pros) and enter the following:
+From here, GREATAPI should be addable on the upgrade tab of the PROS editor. You may have to manually type in the name for it to be detected. If GREATAPI isn't there or you want to use vscode instead, open up a console in the directory of your PROS project(the folder with project.pros) and enter the following:
 
 `
 prosv5 conduct apply greatapi
