@@ -3,6 +3,80 @@
 GREATAPI provides PID control loops to assist you in developing PID control systems for your robot. 
 ## Proportional, Integral, and Derivative controllers
 
+> Prototype
+
+```cpp
+struct Proportional: public controlelement{
+    double maxcap;
+    double mincap;
+    Proportional(double fac):controlelement(fac){
+        mincap = __DBL_MIN__;
+        maxcap = __DBL_MAX__;
+    }
+
+    Proportional(double fac, std::pair<double,double> caps):controlelement(fac){
+        maxcap = std::get<0>(caps);
+        mincap = std::get<1>(caps);
+    }
+
+    //standard offset format: target-current. This class assumes the offset is in the correct direction already
+    double compute(double target, double current){
+        double rawval = (target-current);
+        double returnval = factor*rawval;
+        return (returnval <= maxcap) ? ((returnval >= mincap) ? returnval : mincap) : maxcap;
+    }
+};
+
+struct Integral: public controlelement{
+    double last = 0;
+    double maxcap;
+    double mincap;
+
+    //this is NOT recommended due to integral windup
+    Integral(double fac):controlelement(fac){
+        mincap = __DBL_MIN__;
+        maxcap = __DBL_MAX__;
+    }
+
+    Integral(double fac, std::pair<double,double> caps):controlelement(fac){
+        maxcap = std::get<0>(caps);
+        mincap = std::get<1>(caps);
+    }
+
+    //standard offset format: target-current. This class assumes the offset is in the correct direction already
+    double compute(double target, double current){
+        if((int)target == (int)current) last = 0;
+        double rawval = (target-current);
+        last += rawval;
+        double returnval = last*factor;
+        return (returnval <= maxcap) ? ((returnval >= mincap) ? returnval : mincap) : maxcap;
+    }
+};
+
+struct Derivative: public controlelement{
+    double past = 0;
+    double maxcap;
+    double mincap;
+    Derivative(double fac):controlelement(fac){
+        mincap = __DBL_MIN__;
+        maxcap = __DBL_MAX__;
+    }
+
+    Derivative(double fac, std::pair<double,double> caps):controlelement(fac){
+        maxcap = std::get<0>(caps);
+        mincap = std::get<1>(caps);
+    }
+    
+    //standard offset format: target-current. This class assumes the offset is in the correct direction already
+      double compute(double target, double current){
+          double rawval = target-current;
+          double returnval = factor * (rawval-past);
+          past = rawval;
+          return (returnval <= maxcap) ? ((returnval >= mincap) ? returnval : mincap) : maxcap;
+      }
+};
+```
+
 The controllers GREATAPI offers are separate P, I, and D controllers throught the <code>controlelement</code> class. 
 Each of the three controllers have their own child class of controlelement. 
 
