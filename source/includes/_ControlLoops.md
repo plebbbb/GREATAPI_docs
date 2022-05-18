@@ -4,7 +4,6 @@ GREATAPI provides PID control loops to assist you in developing PID control syst
 ## Proportional, Integral, and Derivative controllers
 
 > Prototype
-
 ```cpp
 struct Proportional: public controlelement{
     double maxcap;
